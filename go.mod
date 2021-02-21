@@ -1,0 +1,1 @@
+module "github.com/byroni/gfycat-sdk-go"
