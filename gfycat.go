@@ -9,7 +9,7 @@ import (
 
 // ClientConfig describes configuration options
 type ClientConfig struct {
-	ClientID string
+	ClientID     string
 	ClientSecret string
 }
 
@@ -40,18 +40,18 @@ type Response struct {
 		Width              int           `json:"width"`
 		Height             int           `json:"height"`
 		AvgColor           string        `json:"avgColor"`
-		FrameRate          int           `json:"frameRate"`
-		NumFrames          int           `json:"numFrames"`
+		FrameRate          float32       `json:"frameRate"`
+		NumFrames          float32       `json:"numFrames"`
 		Mp4Size            int           `json:"mp4Size"`
 		WebmSize           int           `json:"webmSize"`
 		GifSize            int           `json:"gifSize"`
 		Source             int           `json:"source"`
 		CreateDate         int           `json:"createDate"`
-		Nsfw               string        `json:"nsfw"`
+		Nsfw               int           `json:"nsfw"`
 		Mp4URL             string        `json:"mp4Url"`
-		Likes              string        `json:"likes"`
+		Likes              int           `json:"likes"`
 		Published          int           `json:"published"`
-		Dislikes           string        `json:"dislikes"`
+		Dislikes           int           `json:"dislikes"`
 		ExtraLemmas        string        `json:"extraLemmas"`
 		Md5                string        `json:"md5"`
 		Views              int           `json:"views"`
@@ -60,7 +60,7 @@ type Response struct {
 		Title              string        `json:"title"`
 		Description        string        `json:"description"`
 		LanguageText       string        `json:"languageText"`
-		LanguageCategories string         `json:"languageCategories"`
+		LanguageCategories []string      `json:"languageCategories"`
 		Subreddit          string        `json:"subreddit"`
 		RedditID           string        `json:"redditId"`
 		RedditIDText       string        `json:"redditIdText"`
@@ -69,13 +69,13 @@ type Response struct {
 }
 
 // New creates a Gfycat client.
-func New(config ClientConfig) (Client, error) {
+func New(config ClientConfig) Client {
 	return Client{
 		ClientCredentials: ClientCredentials{
 			config.ClientID,
 			config.ClientSecret,
 		},
-	}, nil
+	}
 }
 
 // Authenticate will authenticate using client credentials. Returns a bearer token.
@@ -105,7 +105,7 @@ func (client Client) GetGfycat(gfyID string) (Response, error) {
 	if ok := client.CheckToken(); !ok {
 		return Response{}, errors.New("Access token missing")
 	}
-	bearer := "Bearer "+client.AccessToken
+	bearer := "Bearer " + client.AccessToken
 
 	req, err := http.NewRequest("GET", GFYCATS_URL+"/"+gfyID, nil)
 	if err != nil {

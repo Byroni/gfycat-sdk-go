@@ -15,9 +15,9 @@ func TestNewAuthClient(t *testing.T) {
 
 	authClient := NewAuthClient(clientID, clientSecret)
 
-	a.Equal(authClient.GrantType, grantType, "GrantType should be " + grantType)
-	a.Equal(authClient.ClientID, clientID, "ClientID should be " + clientID)
-	a.Equal(authClient.ClientSecret, clientSecret, "ClientSecret should be " + clientSecret)
+	a.Equal(authClient.GrantType, grantType, "GrantType should be "+grantType)
+	a.Equal(authClient.ClientID, clientID, "ClientID should be "+clientID)
+	a.Equal(authClient.ClientSecret, clientSecret, "ClientSecret should be "+clientSecret)
 }
 
 func TestAuthRequest_GetAccessToken(t *testing.T) {
