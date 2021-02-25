@@ -1,6 +1,7 @@
 package gfycat
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
@@ -90,7 +91,7 @@ func TestGetGfycat(t *testing.T) {
 	a.NoError(err)
 	a.NotEmpty(gfycatResponse.GfyItem.GfyID)
 	a.Equal("id", gfycatResponse.GfyItem.GfyID, "GfyID must equal mocked value")
-	a.Equal(0, gfycatResponse.GfyItem.Likes, "Likes must equal mocked value")
+	a.Equal(json.Number("0"), gfycatResponse.GfyItem.Likes, "Likes must equal mocked value")
 
 	mockTeardown()
 }
