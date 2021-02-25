@@ -3,6 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/byroni/gfycat-sdk-go)](https://goreportcard.com/report/github.com/byroni/gfycat-sdk-go)
 <a href='https://github.com/jpoles1/gopherbadger' target='_blank'>![gopherbadger-tag-do-not-edit](https://img.shields.io/badge/Go%20Coverage-58%25-brightgreen.svg?longCache=true&style=flat)</a>
 ---
+# STILL IN ACTIVE DEVELOPMENT
 This is the unofficial Gfycat SDK for Golang. See official Gfycat API documentation [here](https://developers.gfycat.com/api/).
 
 ## Getting Started
