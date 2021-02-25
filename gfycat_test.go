@@ -1,6 +1,7 @@
 package gfycat
 
 import (
+	"fmt"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -59,10 +60,11 @@ func TestGetGfycat(t *testing.T) {
 
 	mockedResponse := `
 		{
-			"GfyItem": {
-				"GfyID": "id"
+			"gfyItem": {
+				"gfyId": "id",
+				"likes": 0
 			}
-		}		
+		}
 	`
 
 	httpmock.RegisterResponder("GET", GFYCATS_URL+"/"+mockGfycatID, httpmock.NewStringResponder(200, mockedResponse))
@@ -84,10 +86,11 @@ func TestGetGfycat(t *testing.T) {
 	a.NoError(err)
 
 	gfycatResponse, err := client.GetGfycat(mockGfycatID)
-
+	fmt.Println(err)
 	a.NoError(err)
 	a.NotEmpty(gfycatResponse.GfyItem.GfyID)
 	a.Equal("id", gfycatResponse.GfyItem.GfyID, "GfyID must equal mocked value")
+	a.Equal(0, gfycatResponse.GfyItem.Likes, "Likes must equal mocked value")
 
 	mockTeardown()
 }
