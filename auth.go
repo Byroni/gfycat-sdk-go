@@ -67,7 +67,7 @@ func (authRequest AuthRequest) GetAccessToken() (AuthResponse, error) {
 	if err != nil {
 		return AuthResponse{}, err
 	}
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+	if resp.StatusCode != http.StatusOK {
 		return AuthResponse{}, errors.New("Request failed with status code " + resp.Status)
 	}
 
@@ -93,7 +93,7 @@ func (authRequest AuthRequest) RefreshAccessToken(token string) (AuthResponse, e
 	if err != nil {
 		return AuthResponse{}, err
 	}
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+	if resp.StatusCode != http.StatusOK {
 		return AuthResponse{}, errors.New("Request failed with status code" + resp.Status)
 	}
 

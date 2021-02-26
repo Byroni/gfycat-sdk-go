@@ -3,6 +3,7 @@ package gfycat
 import (
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	"testing"
 )
 
@@ -33,7 +34,7 @@ func TestAuthRequest_GetAccessToken(t *testing.T) {
 	`
 
 	httpmock.Activate()
-	httpmock.RegisterResponder("POST", AUTH_TOKEN_URL, httpmock.NewStringResponder(200, mockedResponse))
+	httpmock.RegisterResponder(http.MethodPost, AUTH_TOKEN_URL, httpmock.NewStringResponder(200, mockedResponse))
 
 	authClient := NewAuthClient("client_credentials", "client_secret")
 
@@ -54,7 +55,7 @@ func TestAuthRequest_GetAccessTokenFail(t *testing.T) {
 	a := assert.New(t)
 
 	httpmock.Activate()
-	httpmock.RegisterResponder("POST", AUTH_TOKEN_URL, httpmock.NewStringResponder(401, ""))
+	httpmock.RegisterResponder(http.MethodPost, AUTH_TOKEN_URL, httpmock.NewStringResponder(401, ""))
 
 	authClient := NewAuthClient("client_credentials", "client_secret")
 
@@ -80,7 +81,7 @@ func TestAuthRequest_RefreshAccessToken(t *testing.T) {
 	`
 
 	httpmock.Activate()
-	httpmock.RegisterResponder("POST", AUTH_TOKEN_URL, httpmock.NewStringResponder(200, mockedResponse))
+	httpmock.RegisterResponder(http.MethodPost, AUTH_TOKEN_URL, httpmock.NewStringResponder(200, mockedResponse))
 
 	authClient := NewAuthClient("client_credentials", "client_secret")
 

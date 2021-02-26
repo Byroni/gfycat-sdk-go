@@ -2,9 +2,9 @@ package gfycat
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
+	"net/http"
 	"testing"
 )
 
@@ -23,11 +23,13 @@ func mockSetup() {
 			"access_token":"access_token"
 		}
 	`
-	httpmock.RegisterResponder("POST", AUTH_TOKEN_URL, httpmock.NewStringResponder(200, mockedAuthResponse))
+	httpmock.RegisterResponder(http.MethodPost, AUTH_TOKEN_URL, httpmock.NewStringResponder(200, mockedAuthResponse))
 }
 
 func TestGfycatClient_CheckToken(t *testing.T) {
 	mockSetup()
+	defer mockTeardown()
+
 	a := assert.New(t)
 
 	config := ClientConfig{
@@ -51,12 +53,12 @@ func TestGfycatClient_CheckToken(t *testing.T) {
 	a.True(ok)
 
 	a.NotEmpty(client.AccessToken)
-
-	mockTeardown()
 }
 
 func TestGetGfycat(t *testing.T) {
 	mockSetup()
+	defer mockTeardown()
+
 	a := assert.New(t)
 
 	mockedResponse := `
@@ -68,7 +70,7 @@ func TestGetGfycat(t *testing.T) {
 		}
 	`
 
-	httpmock.RegisterResponder("GET", GFYCATS_URL+"/"+mockGfycatID, httpmock.NewStringResponder(200, mockedResponse))
+	httpmock.RegisterResponder(http.MethodGet, GFYCATS_URL+"/"+mockGfycatID, httpmock.NewStringResponder(200, mockedResponse))
 
 	config := ClientConfig{
 		ClientID:     "client_id",
@@ -87,13 +89,11 @@ func TestGetGfycat(t *testing.T) {
 	a.NoError(err)
 
 	gfycatResponse, err := client.GetGfycat(mockGfycatID)
-	fmt.Println(err)
 	a.NoError(err)
 	a.NotEmpty(gfycatResponse.GfyItem.GfyID)
 	a.Equal("id", gfycatResponse.GfyItem.GfyID, "GfyID must equal mocked value")
 	a.Equal(json.Number("0"), gfycatResponse.GfyItem.Likes, "Likes must equal mocked value")
 
-	mockTeardown()
 }
 
 func TestClient_GetGfycat_successfully_handles_404(t *testing.T) {
@@ -105,7 +105,7 @@ func TestClient_GetGfycat_successfully_handles_404(t *testing.T) {
 			"errorMessage": "does not exist."
 		}
 	`
-	httpmock.RegisterResponder("GET", GFYCATS_URL+"/"+mockGfycatID, httpmock.NewStringResponder(404, mockedResponse))
+	httpmock.RegisterResponder(http.MethodGet, GFYCATS_URL+"/"+mockGfycatID, httpmock.NewStringResponder(404, mockedResponse))
 
 	a := assert.New(t)
 

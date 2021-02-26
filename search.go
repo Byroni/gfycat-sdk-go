@@ -19,8 +19,8 @@ type SearchResponse struct {
 	Cursor  string `json:"cursor"`
 	Gfycats []struct {
 		GfyItem
-		Tags []string `json:"tags"`
-		UserData  struct {
+		Tags     []string `json:"tags"`
+		UserData struct {
 			Name            string `json:"name"`
 			ProfileImageURL string `json:"profileImageUrl"`
 			URL             string `json:"url"`
@@ -32,7 +32,7 @@ type SearchResponse struct {
 			Views           int    `json:"views"`
 			Verified        bool   `json:"verified"`
 		} `json:"userData"`
-		ContentUrls         struct {
+		ContentUrls struct {
 			Max2MbGif struct {
 				URL    string `json:"url"`
 				Size   int    `json:"size"`
@@ -107,28 +107,27 @@ func (client GfycatClient) Search(searchTerm string) (SearchResponse, error) {
 	}
 	bearer := "Bearer " + client.AccessToken
 
-	req, err := http.NewRequest("GET", SEARCH_URL, nil)
+	req, err := http.NewRequest(http.MethodGet, SEARCH_URL, nil)
 	if err != nil {
 		return SearchResponse{}, err
 	}
 	// Add authorization header
 	req.Header.Add("Authorization", bearer)
 
-	fmt.Println(bearer)
 	// Add query params
 	q := req.URL.Query()
 	q.Add("search_text", searchTerm)
 	req.URL.RawQuery = q.Encode()
 
-	fmt.Println(req.URL.String())
 	httpClient := &http.Client{}
 
+	// Make request
 	var resp *http.Response
 	resp, err = httpClient.Do(req)
 	if err != nil {
 		return SearchResponse{}, err
 	}
-	if resp.StatusCode == 403 {
+	if resp.StatusCode == http.StatusUnauthorized {
 		fmt.Printf("%+v", resp)
 		return SearchResponse{}, errors.New("unauthorized")
 	}
@@ -139,7 +138,5 @@ func (client GfycatClient) Search(searchTerm string) (SearchResponse, error) {
 		return SearchResponse{}, err
 	}
 
-	fmt.Printf("%+v", searchResponse)
-
-	return SearchResponse{}, nil
+	return searchResponse, nil
 }

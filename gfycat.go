@@ -43,24 +43,24 @@ type GfyItem struct {
 	Max2MbGif          string        `json:"max2mbGif"`
 	Max1MbGif          string        `json:"max1mbGif"`
 	Gif100Px           string        `json:"gif100px"`
-	Width              json.Number           `json:"width"`
-	Height             json.Number           `json:"height"`
+	Width              json.Number   `json:"width"`
+	Height             json.Number   `json:"height"`
 	AvgColor           string        `json:"avgColor"`
 	FrameRate          float32       `json:"frameRate"`
 	NumFrames          float32       `json:"numFrames"`
-	Mp4Size            json.Number           `json:"mp4Size"`
-	WebmSize           json.Number           `json:"webmSize"`
-	GifSize            json.Number           `json:"gifSize"`
-	Source             json.Number           `json:"source"`
-	CreateDate         json.Number           `json:"createDate"`
-	Nsfw               json.Number           `json:"nsfw"`
+	Mp4Size            json.Number   `json:"mp4Size"`
+	WebmSize           json.Number   `json:"webmSize"`
+	GifSize            json.Number   `json:"gifSize"`
+	Source             json.Number   `json:"source"`
+	CreateDate         json.Number   `json:"createDate"`
+	Nsfw               json.Number   `json:"nsfw"`
 	Mp4URL             string        `json:"mp4Url"`
-	Likes              json.Number           `json:"likes"`
-	Published          json.Number           `json:"published"`
-	Dislikes           json.Number           `json:"dislikes"`
+	Likes              json.Number   `json:"likes"`
+	Published          json.Number   `json:"published"`
+	Dislikes           json.Number   `json:"dislikes"`
 	ExtraLemmas        string        `json:"extraLemmas"`
 	Md5                string        `json:"md5"`
-	Views              json.Number           `json:"views"`
+	Views              json.Number   `json:"views"`
 	Tags               []string      `json:"tags"`
 	UserName           string        `json:"userName"`
 	Title              string        `json:"title"`
@@ -112,7 +112,7 @@ func (client GfycatClient) GetGfycat(gfyID string) (GfycatResponse, error) {
 	}
 	bearer := "Bearer " + client.AccessToken
 
-	req, err := http.NewRequest("GET", GFYCATS_URL+"/"+gfyID, nil)
+	req, err := http.NewRequest(http.MethodGet, GFYCATS_URL+"/"+gfyID, nil)
 	if err != nil {
 		return GfycatResponse{}, err
 	}
@@ -125,7 +125,7 @@ func (client GfycatClient) GetGfycat(gfyID string) (GfycatResponse, error) {
 	if err != nil {
 		return GfycatResponse{}, err
 	}
-	if resp.StatusCode == 404 {
+	if resp.StatusCode == http.StatusNotFound {
 		var res map[string]interface{}
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
@@ -136,7 +136,7 @@ func (client GfycatClient) GetGfycat(gfyID string) (GfycatResponse, error) {
 		}
 		return GfycatResponse{}, errors.New(res["errorMessage"].(string))
 	}
-	if resp.StatusCode == 403 {
+	if resp.StatusCode == http.StatusUnauthorized {
 		return GfycatResponse{}, errors.New("unauthorized")
 	}
 
